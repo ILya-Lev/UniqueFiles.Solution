@@ -1,26 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 
 namespace UniqueFiles.BL
 {
     public class DuplicateCleaner
     {
+        private readonly string _rootFolder;
         private readonly IUniqueFileRegistry _uniqueFileRegistry;
         private readonly IBackedUpFileRegistry _backedUpFileRegistry;
         private readonly IFileSystemEntityProvider _fileNamesProvider;
         private readonly IFileSystemEntityProvider _folderNamesProvider;
 
-        public DuplicateCleaner(IUniqueFileRegistry uniqueFileRegistry, IBackedUpFileRegistry backedUpFileRegistry, IFileSystemEntityProvider fileNamesProvider, IFileSystemEntityProvider folderNamesProvider)
+        public DuplicateCleaner(string rootFolder, IUniqueFileRegistry uniqueFileRegistry,
+            IBackedUpFileRegistry backedUpFileRegistry, IFileSystemEntityProvider fileNamesProvider,
+            IFileSystemEntityProvider folderNamesProvider)
         {
+            _rootFolder = rootFolder;
             _uniqueFileRegistry = uniqueFileRegistry;
             _backedUpFileRegistry = backedUpFileRegistry;
             _fileNamesProvider = fileNamesProvider;
             _folderNamesProvider = folderNamesProvider;
         }
 
-        public void Clean(string rootFolder)
+        public void Clean()
         {
             var folderQueue = new Queue<string>();
-            folderQueue.Enqueue(rootFolder);
+            folderQueue.Enqueue(_rootFolder);
             while (folderQueue.Count != 0)
             {
                 var currentFolder = folderQueue.Dequeue();
@@ -30,23 +35,25 @@ namespace UniqueFiles.BL
 
         private void ProcessOneFolder(string currentFolder, Queue<string> folderQueue)
         {
-            foreach (var file in _fileNamesProvider.GetNames(currentFolder))
+            foreach (var filePath in _fileNamesProvider.GetFullPath(currentFolder))
             {
-                ProcessOneFile(file);
+                ProcessOneFile(filePath);
             }
 
-            foreach (var directory in _folderNamesProvider.GetNames(currentFolder))
+            foreach (var directoryPath in _folderNamesProvider.GetFullPath(currentFolder))
             {
-                folderQueue.Enqueue(directory);
+                folderQueue.Enqueue(directoryPath);
             }
         }
 
-        private void ProcessOneFile(string fileName)
+        private void ProcessOneFile(string filePath)
         {
-            if (_uniqueFileRegistry.Contains(fileName))
-                _backedUpFileRegistry.Add(fileName);
+            var fileInfo = new FileInfo(filePath);
+
+            if (_uniqueFileRegistry.Contains(fileInfo))
+                _backedUpFileRegistry.Add(fileInfo);
             else
-                _uniqueFileRegistry.Add(fileName);
+                _uniqueFileRegistry.Add(fileInfo);
         }
     }
 }

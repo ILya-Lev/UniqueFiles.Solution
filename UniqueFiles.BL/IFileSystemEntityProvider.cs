@@ -4,6 +4,6 @@ namespace UniqueFiles.BL
 {
     public interface IFileSystemEntityProvider
     {
-        IEnumerable<string> GetNames(string folder);
+        IEnumerable<string> GetFullPath(string folder);
     }
 }

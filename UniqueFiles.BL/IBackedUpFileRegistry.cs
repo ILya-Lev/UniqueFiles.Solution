@@ -1,7 +1,9 @@
-﻿namespace UniqueFiles.BL
+﻿using System.IO;
+
+namespace UniqueFiles.BL
 {
     public interface IBackedUpFileRegistry
     {
-        void Add(string filePath);
+        void Add(FileInfo fileInfo);
     }
 }

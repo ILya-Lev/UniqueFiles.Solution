@@ -1,8 +1,10 @@
-﻿namespace UniqueFiles.BL
+﻿using System.IO;
+
+namespace UniqueFiles.BL
 {
     public interface IUniqueFileRegistry
     {
-        bool Contains(string filePath);
-        void Add(string filePath);
+        bool Contains(FileInfo fileInfo);
+        void Add(FileInfo fileInfo);
     }
 }
