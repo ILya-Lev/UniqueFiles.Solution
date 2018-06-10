@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UniqueFiles.BL.Interfaces;
 using Xunit;
 
 namespace UniqueFiles.BL.Tests

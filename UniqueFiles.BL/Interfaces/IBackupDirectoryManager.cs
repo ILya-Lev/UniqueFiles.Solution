@@ -1,4 +1,4 @@
-﻿namespace UniqueFiles.BL
+﻿namespace UniqueFiles.BL.Interfaces
 {
     public interface IBackupDirectoryManager
     {

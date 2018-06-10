@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using UniqueFiles.BL.Interfaces;
 
 namespace UniqueFiles.BL
 {

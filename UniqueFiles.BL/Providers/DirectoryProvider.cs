@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UniqueFiles.BL.Interfaces;
 
-namespace UniqueFiles.BL
+namespace UniqueFiles.BL.Providers
 {
     public class DirectoryProvider : IFileSystemEntityProvider
     {

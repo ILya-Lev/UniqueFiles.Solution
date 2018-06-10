@@ -1,4 +1,7 @@
-﻿namespace UniqueFiles.BL
+﻿using UniqueFiles.BL.Providers;
+using UniqueFiles.BL.Registries;
+
+namespace UniqueFiles.BL
 {
     public class DuplicateCleaningTransaction
     {

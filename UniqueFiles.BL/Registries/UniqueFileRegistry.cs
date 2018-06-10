@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using UniqueFiles.BL.Interfaces;
 
-namespace UniqueFiles.BL
+namespace UniqueFiles.BL.Registries
 {
     public class UniqueFileRegistry : IUniqueFileRegistry
     {
         private readonly Dictionary<string, FileInfo> _registry = new Dictionary<string, FileInfo>();
-        //public UniqueFileRegistry(IFileKeyGenerator fileKeyGenerator)
-        //{
-        //}
 
         public bool Contains(FileInfo fileInfo)
         {
