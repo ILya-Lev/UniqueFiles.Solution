@@ -4,12 +4,12 @@ using UniqueFiles.BL.Registries;
 
 namespace UniqueFiles.BL
 {
-    public class DuplicateCleaningTransaction : ITransaction
+    public class DuplicateCleaningPreserveFoldersTransaction : ITransaction
     {
         private readonly string _rootFolder;
         private readonly string _backupFolder;
 
-        public DuplicateCleaningTransaction(string rootFolder, string backupFolder)
+        public DuplicateCleaningPreserveFoldersTransaction(string rootFolder, string backupFolder)
         {
             _rootFolder = rootFolder;
             _backupFolder = backupFolder;
@@ -23,12 +23,11 @@ namespace UniqueFiles.BL
                 var backedUpFileRegistry = new BackedUpFilesRegistry(backupManager);
                 var folderNamesProvider = new DirectoryProvider(backupManager.BackupRoot);
 
-                var cleaner = new DuplicateCleanerRemoveEmptyFolders(
+                var cleaner = new DuplicateCleaner(
                     new UniqueFileRegistry(),
                     backedUpFileRegistry,
                     new FileProvider(),
-                    folderNamesProvider,
-                    backupManager);
+                    folderNamesProvider);
 
                 cleaner.Clean(_rootFolder);
             }

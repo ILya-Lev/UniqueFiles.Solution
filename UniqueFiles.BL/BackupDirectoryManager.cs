@@ -4,7 +4,7 @@ using UniqueFiles.BL.Interfaces;
 
 namespace UniqueFiles.BL
 {
-    public class BackupDirectoryManager : IBackupDirectoryManager
+    public class BackupDirectoryManager : IBackupDirectoryManager, IDisposable
     {
         public static string DefaultBackUpSubFolder { get; } = "bkp";
         public string BackupRoot { get; private set; }
@@ -12,6 +12,11 @@ namespace UniqueFiles.BL
         public BackupDirectoryManager(string rootFolder, string backupFolder)
         {
             BackupRoot = GenerateBackUpPath(rootFolder, backupFolder);
+        }
+
+        public void Dispose()
+        {
+            DeleteBackupDirectory();
         }
 
         public void CreateBackupDirectory(string subFolder = null)
@@ -24,7 +29,7 @@ namespace UniqueFiles.BL
         {
             var actualPath = GetActualPath(subFolder);
 
-            if (Directory.GetFiles(actualPath).Length == 0)
+            if (Directory.GetFileSystemEntries(actualPath).Length == 0)
                 Directory.Delete(actualPath);
         }
 

@@ -2,7 +2,7 @@
 
 namespace UniqueFiles.BL.Interfaces
 {
-    public interface IBackedUpFileRegistry
+    public interface IBackedUpFilesRegistry
     {
         void Add(FileInfo fileInfo);
     }

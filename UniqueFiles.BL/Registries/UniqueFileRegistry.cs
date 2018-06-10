@@ -6,16 +6,16 @@ namespace UniqueFiles.BL.Registries
 {
     public class UniqueFileRegistry : IUniqueFileRegistry
     {
-        private readonly Dictionary<string, FileInfo> _registry = new Dictionary<string, FileInfo>();
+        private readonly HashSet<string> _registry = new HashSet<string>();
 
         public bool Contains(FileInfo fileInfo)
         {
-            return _registry.ContainsKey(fileInfo.Name);
+            return _registry.Contains(fileInfo.Name);
         }
 
         public void Add(FileInfo fileInfo)
         {
-            _registry.Add(fileInfo.Name, fileInfo);
+            _registry.Add(fileInfo.Name);
         }
     }
 }

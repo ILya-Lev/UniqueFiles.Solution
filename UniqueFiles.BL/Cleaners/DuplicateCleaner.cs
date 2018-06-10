@@ -2,39 +2,38 @@
 using System.IO;
 using UniqueFiles.BL.Interfaces;
 
-namespace UniqueFiles.BL
+namespace UniqueFiles.BL.Cleaners
 {
     public class DuplicateCleaner
     {
-        private readonly string _rootFolder;
         private readonly IUniqueFileRegistry _uniqueFileRegistry;
-        private readonly IBackedUpFileRegistry _backedUpFileRegistry;
+        private readonly IBackedUpFilesRegistry _backedUpFilesRegistry;
         private readonly IFileSystemEntityProvider _fileNamesProvider;
         private readonly IFileSystemEntityProvider _folderNamesProvider;
 
-        public DuplicateCleaner(string rootFolder, IUniqueFileRegistry uniqueFileRegistry,
-            IBackedUpFileRegistry backedUpFileRegistry, IFileSystemEntityProvider fileNamesProvider,
+        public DuplicateCleaner(IUniqueFileRegistry uniqueFileRegistry,
+            IBackedUpFilesRegistry backedUpFilesRegistry,
+            IFileSystemEntityProvider fileNamesProvider,
             IFileSystemEntityProvider folderNamesProvider)
         {
-            _rootFolder = rootFolder;
             _uniqueFileRegistry = uniqueFileRegistry;
-            _backedUpFileRegistry = backedUpFileRegistry;
+            _backedUpFilesRegistry = backedUpFilesRegistry;
             _fileNamesProvider = fileNamesProvider;
             _folderNamesProvider = folderNamesProvider;
         }
 
-        public void Clean()
+        public virtual void Clean(string rootFolder)
         {
-            var folderQueue = new Queue<string>();
-            folderQueue.Enqueue(_rootFolder);
-            while (folderQueue.Count != 0)
+            var folders = new Queue<string>();
+            folders.Enqueue(rootFolder);
+            while (folders.Count != 0)
             {
-                var currentFolder = folderQueue.Dequeue();
-                ProcessOneFolder(currentFolder, folderQueue);
+                var currentFolder = folders.Dequeue();
+                ProcessOneFolder(currentFolder, folders);
             }
         }
 
-        private void ProcessOneFolder(string currentFolder, Queue<string> folderQueue)
+        protected virtual void ProcessOneFolder(string currentFolder, Queue<string> folders)
         {
             foreach (var filePath in _fileNamesProvider.GetDescendantPaths(currentFolder))
             {
@@ -43,7 +42,7 @@ namespace UniqueFiles.BL
 
             foreach (var directoryPath in _folderNamesProvider.GetDescendantPaths(currentFolder))
             {
-                folderQueue.Enqueue(directoryPath);
+                folders.Enqueue(directoryPath);
             }
         }
 
@@ -52,7 +51,7 @@ namespace UniqueFiles.BL
             var fileInfo = new FileInfo(filePath);
 
             if (_uniqueFileRegistry.Contains(fileInfo))
-                _backedUpFileRegistry.Add(fileInfo);
+                _backedUpFilesRegistry.Add(fileInfo);
             else
                 _uniqueFileRegistry.Add(fileInfo);
         }

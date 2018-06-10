@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UniqueFiles.BL.Cleaners;
 using UniqueFiles.BL.Interfaces;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace UniqueFiles.BL.Tests
                               .Callback<FileInfo>(info => _uniqueNames.Add(info.Name));
 
 
-            var backedUpFileRegistry = new Mock<IBackedUpFileRegistry>(MockBehavior.Strict);
+            var backedUpFileRegistry = new Mock<IBackedUpFilesRegistry>(MockBehavior.Strict);
             backedUpFileRegistry.Setup(r => r.Add(It.IsAny<FileInfo>()))
                                 .Callback<FileInfo>(info => _backedUpNames.Add(info.Name));
 
@@ -38,7 +39,7 @@ namespace UniqueFiles.BL.Tests
             folderNamesProvider.Setup(p => p.GetDescendantPaths(It.IsAny<string>()))
                                .Returns<string>(path => _folderNamesGenerator(path));
 
-            _cleaner = new DuplicateCleaner("root", uniqueFileRegistry.Object, backedUpFileRegistry.Object, fileNamesProvider.Object, folderNamesProvider.Object);
+            _cleaner = new DuplicateCleaner(uniqueFileRegistry.Object, backedUpFileRegistry.Object, fileNamesProvider.Object, folderNamesProvider.Object);
         }
 
         [Fact]
@@ -47,7 +48,7 @@ namespace UniqueFiles.BL.Tests
             _folderNamesGenerator = path => Enumerable.Empty<string>();
             _fileNamesGenerator = path => Enumerable.Empty<string>();
 
-            _cleaner.Clean();
+            _cleaner.Clean("root");
 
             _uniqueNames.Should().BeEmpty();
             _backedUpNames.Should().BeEmpty();
@@ -60,7 +61,7 @@ namespace UniqueFiles.BL.Tests
             var fileNames = new[] { "a", "b", "c" };
             _fileNamesGenerator = path => fileNames;
 
-            _cleaner.Clean();
+            _cleaner.Clean("root");
 
             _uniqueNames.Should().BeEquivalentTo(fileNames);
             _backedUpNames.Should().BeEmpty();
@@ -73,7 +74,7 @@ namespace UniqueFiles.BL.Tests
             var fileNames = new[] { "a", "b", "a", "c", "b", "a" };
             _fileNamesGenerator = path => fileNames;
 
-            _cleaner.Clean();
+            _cleaner.Clean("root");
 
             _uniqueNames.Should().BeEquivalentTo(new[] { "a", "b", "c" });
             _backedUpNames.Should().BeEquivalentTo(new[] { "a", "b", "a" });
@@ -106,7 +107,7 @@ namespace UniqueFiles.BL.Tests
                 }
             };
 
-            _cleaner.Clean();
+            _cleaner.Clean("root");
 
             _uniqueNames.Should().BeEquivalentTo(new[] { "a", "b", "c", "d", "e", "f" });
             _backedUpNames.Should().BeEmpty();
@@ -140,7 +141,7 @@ namespace UniqueFiles.BL.Tests
                 }
             };
 
-            _cleaner.Clean();
+            _cleaner.Clean("root");
 
             _uniqueNames.Should().BeEquivalentTo(new[] { "a", "b", "c", "d", "f", "e" });
             _backedUpNames.Should().BeEquivalentTo(new[] { "a", "d", "c" });

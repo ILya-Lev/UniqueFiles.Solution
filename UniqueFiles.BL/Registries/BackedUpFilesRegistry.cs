@@ -4,37 +4,30 @@ using UniqueFiles.BL.Interfaces;
 
 namespace UniqueFiles.BL.Registries
 {
-    public class BackedUpFileRegistry : IBackedUpFileRegistry
+    public class BackedUpFilesRegistry : IBackedUpFilesRegistry
     {
         private readonly IBackupDirectoryManager _backupDirectoryManager;
 
-        private readonly Dictionary<string, int> _backedUpFiles = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> _backupFileCounters = new Dictionary<string, int>();
 
-        public BackedUpFileRegistry(IBackupDirectoryManager backupDirectoryManager)
+        public BackedUpFilesRegistry(IBackupDirectoryManager backupDirectoryManager)
         {
             _backupDirectoryManager = backupDirectoryManager;
         }
 
-        ~BackedUpFileRegistry()
-        {
-            _backupDirectoryManager.DeleteBackupDirectory();
-        }
-
         public void Add(FileInfo fileInfo)
         {
-            var initialFolder = fileInfo.Directory.FullName;
-            if (_backedUpFiles.ContainsKey(fileInfo.Name))
+            if (_backupFileCounters.ContainsKey(fileInfo.Name))
             {
-                var fileSeenTimes = _backedUpFiles[fileInfo.Name] + 1;
+                var fileSeenTimes = _backupFileCounters[fileInfo.Name] + 1;
                 fileSeenTimes = MoveToSubFolder(fileInfo, fileSeenTimes);
-                _backedUpFiles[fileInfo.Name] = fileSeenTimes;
+                _backupFileCounters[fileInfo.Name] = fileSeenTimes;
             }
             else
             {
                 var fileSeenTimes = MoveToRoot(fileInfo);
-                _backedUpFiles.Add(fileInfo.Name, fileSeenTimes);
+                _backupFileCounters.Add(fileInfo.Name, fileSeenTimes);
             }
-            _backupDirectoryManager.DeleteBackupDirectory(initialFolder);
         }
 
         private int MoveToRoot(FileInfo fileInfo)
