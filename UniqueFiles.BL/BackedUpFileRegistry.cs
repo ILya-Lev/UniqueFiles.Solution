@@ -1,62 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace UniqueFiles.BL
 {
     public class BackedUpFileRegistry : IBackedUpFileRegistry
     {
-        public static string DefaultBackUpSubFolder { get; } = "bkp";
+        private readonly IBackupDirectoryManager _backupDirectoryManager;
 
         private readonly Dictionary<string, int> _backedUpFiles = new Dictionary<string, int>();
-        private readonly string _backUpRoot;
 
-        public BackedUpFileRegistry(string rootFolder, string backUpFolder)
+        public BackedUpFileRegistry(IBackupDirectoryManager backupDirectoryManager)
         {
-            _backUpRoot = GenerateBackUpPath(rootFolder, backUpFolder);
-            CreateBackupDirectory();
+            _backupDirectoryManager = backupDirectoryManager;
         }
 
         ~BackedUpFileRegistry()
         {
-            if (Directory.GetFiles(_backUpRoot).Length == 0)
-                Directory.Delete(_backUpRoot);
+            _backupDirectoryManager.DeleteBackupDirectory();
         }
 
         public void Add(FileInfo fileInfo)
         {
+            var initialFolder = fileInfo.Directory.FullName;
             if (_backedUpFiles.ContainsKey(fileInfo.Name))
             {
-                var numberTimesFileSeen = _backedUpFiles[fileInfo.Name] + 1;
-                var subFolder = $"{numberTimesFileSeen:D5}";
-                CreateBackupDirectory(subFolder);
-                fileInfo.MoveTo(Path.Combine(_backUpRoot, subFolder));
-                _backedUpFiles.Add(fileInfo.Name, numberTimesFileSeen);
+                var fileSeenTimes = _backedUpFiles[fileInfo.Name] + 1;
+                fileSeenTimes = MoveToSubFolder(fileInfo, fileSeenTimes);
+                _backedUpFiles[fileInfo.Name] = fileSeenTimes;
             }
             else
             {
-                fileInfo.MoveTo(_backUpRoot);
-                _backedUpFiles.Add(fileInfo.Name, 0);
+                var fileSeenTimes = MoveToRoot(fileInfo);
+                _backedUpFiles.Add(fileInfo.Name, fileSeenTimes);
             }
+            _backupDirectoryManager.DeleteBackupDirectory(initialFolder);
         }
 
-        private string GenerateBackUpPath(string rootFolder, string backUpFolder)
+        private int MoveToRoot(FileInfo fileInfo)
         {
-            if (string.IsNullOrWhiteSpace(backUpFolder)
-                || string.Equals(rootFolder, backUpFolder, StringComparison.OrdinalIgnoreCase))
+            try
             {
-                return Path.Combine(rootFolder, DefaultBackUpSubFolder);
+                fileInfo.MoveTo(Path.Combine(_backupDirectoryManager.BackupRoot, fileInfo.Name));
+                return 0;
             }
-
-            return backUpFolder;
+            catch (IOException exc) when (exc.Message.Contains("Cannot create a file when that file already exists"))
+            {
+                return MoveToSubFolder(fileInfo, 1);
+            }
         }
 
-        private void CreateBackupDirectory(string subFolderName = null)
+        private int MoveToSubFolder(FileInfo fileInfo, int fileSeenTimes)
         {
-            if (string.IsNullOrWhiteSpace(subFolderName))
-                Directory.CreateDirectory(_backUpRoot);
-            else
-                Directory.CreateDirectory(Path.Combine(_backUpRoot, subFolderName));
+            try
+            {
+                var subFolder = $"{fileSeenTimes:D5}";
+                _backupDirectoryManager.CreateBackupDirectory(subFolder);
+
+                fileInfo.MoveTo(Path.Combine(_backupDirectoryManager.BackupRoot, subFolder, fileInfo.Name));
+                return fileSeenTimes;
+            }
+            catch (IOException exc) when (exc.Message.Contains("Cannot create a file when that file already exists"))
+            {
+                return MoveToSubFolder(fileInfo, fileSeenTimes + 1);
+            }
         }
     }
 }

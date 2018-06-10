@@ -6,13 +6,21 @@ namespace UniqueFiles.BL.Tests
 {
     public class DuplicateCleanerIntegrationTests
     {
+        //public DuplicateCleanerIntegrationTests()
+        //{
+        //    var testDataRoot = @"D:\Projects\pet\UniqueFiles.Solution\UniqueFiles.BL.Tests\test_data\";
+        //    var testDataSetup = @"_setup";
+        //}
+
         private DuplicateCleaner MakeDuplicateCleaner(string rootFolder)
         {
+            var manager = new BackupDirectoryManager(rootFolder, null);
+            manager.CreateBackupDirectory();
             return new DuplicateCleaner(rootFolder,
                                         new UniqueFileRegistry(),
-                                        new BackedUpFileRegistry(rootFolder, null),
+                                        new BackedUpFileRegistry(manager),
                                         new FileProvider(),
-                                        new DirectoryProvider());
+                                        new DirectoryProvider(manager.BackupRoot));
         }
 
         [Fact]
@@ -29,7 +37,7 @@ namespace UniqueFiles.BL.Tests
             finalFilesAmount.Should().Be(initialFilesAmount);
 
             var backedUpFilesAmount = Directory
-                .GetFiles(Path.Combine(root, BackedUpFileRegistry.DefaultBackUpSubFolder))
+                .GetFiles(Path.Combine(root, BackupDirectoryManager.DefaultBackUpSubFolder))
                 .Length;
             backedUpFilesAmount.Should().Be(0);
         }
@@ -48,12 +56,12 @@ namespace UniqueFiles.BL.Tests
             finalFilesAmount.Should().Be(initialFilesAmount);
 
             var backedUpFilesAmount = Directory
-                .GetFiles(Path.Combine(root, BackedUpFileRegistry.DefaultBackUpSubFolder))
+                .GetFiles(Path.Combine(root, BackupDirectoryManager.DefaultBackUpSubFolder))
                 .Length;
             backedUpFilesAmount.Should().Be(3);
 
             var backedUpFoldersAmount = Directory
-                .GetDirectories(Path.Combine(root, BackedUpFileRegistry.DefaultBackUpSubFolder))
+                .GetDirectories(Path.Combine(root, BackupDirectoryManager.DefaultBackUpSubFolder))
                 .Length;
             backedUpFoldersAmount.Should().Be(1);
         }

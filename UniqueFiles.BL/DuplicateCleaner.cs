@@ -35,12 +35,12 @@ namespace UniqueFiles.BL
 
         private void ProcessOneFolder(string currentFolder, Queue<string> folderQueue)
         {
-            foreach (var filePath in _fileNamesProvider.GetFullPath(currentFolder))
+            foreach (var filePath in _fileNamesProvider.GetDescendantPaths(currentFolder))
             {
                 ProcessOneFile(filePath);
             }
 
-            foreach (var directoryPath in _folderNamesProvider.GetFullPath(currentFolder))
+            foreach (var directoryPath in _folderNamesProvider.GetDescendantPaths(currentFolder))
             {
                 folderQueue.Enqueue(directoryPath);
             }

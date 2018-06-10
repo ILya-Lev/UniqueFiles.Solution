@@ -30,11 +30,11 @@ namespace UniqueFiles.BL.Tests
                                 .Callback<FileInfo>(info => _backedUpNames.Add(info.Name));
 
             var fileNamesProvider = new Mock<IFileSystemEntityProvider>(MockBehavior.Strict);
-            fileNamesProvider.Setup(p => p.GetFullPath(It.IsAny<string>()))
+            fileNamesProvider.Setup(p => p.GetDescendantPaths(It.IsAny<string>()))
                              .Returns<string>(path => _fileNamesGenerator(path));
 
             var folderNamesProvider = new Mock<IFileSystemEntityProvider>(MockBehavior.Strict);
-            folderNamesProvider.Setup(p => p.GetFullPath(It.IsAny<string>()))
+            folderNamesProvider.Setup(p => p.GetDescendantPaths(It.IsAny<string>()))
                                .Returns<string>(path => _folderNamesGenerator(path));
 
             _cleaner = new DuplicateCleaner("root", uniqueFileRegistry.Object, backedUpFileRegistry.Object, fileNamesProvider.Object, folderNamesProvider.Object);
