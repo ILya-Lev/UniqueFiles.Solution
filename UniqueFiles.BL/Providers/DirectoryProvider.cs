@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UniqueFiles.BL.Interfaces;
 
 namespace UniqueFiles.BL.Providers
 {

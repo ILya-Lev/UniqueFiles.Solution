@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UniqueFiles.BL.Cleaners;
-using UniqueFiles.BL.Interfaces;
+using UniqueFiles.BL.Providers;
+using UniqueFiles.BL.Registries;
 using Xunit;
 
 namespace UniqueFiles.BL.Tests

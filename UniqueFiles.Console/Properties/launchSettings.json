@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UniqueFiles.ConsoleApp": {
+      "commandName": "Project",
+      "commandLineArgs": "p \"D:\\Projects\\pet\\UniqueFiles.Solution\\UniqueFiles.BL.Tests\\test_data\\shallow_duplicates\\\""
+    }
+  }
+}

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using UniqueFiles.BL.Interfaces;
+using UniqueFiles.BL.Providers;
+using UniqueFiles.BL.Registries;
 
 namespace UniqueFiles.BL.Cleaners
 {

@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System.IO;
+using UniqueFiles.BL.Transactions;
 using Xunit;
 
 namespace UniqueFiles.BL.Tests

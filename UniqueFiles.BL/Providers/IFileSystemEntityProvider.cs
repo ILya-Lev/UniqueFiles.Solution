@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UniqueFiles.BL.Interfaces
+namespace UniqueFiles.BL.Providers
 {
     public interface IFileSystemEntityProvider
     {

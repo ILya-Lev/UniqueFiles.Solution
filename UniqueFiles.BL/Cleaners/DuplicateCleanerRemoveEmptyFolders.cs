@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UniqueFiles.BL.Interfaces;
+using UniqueFiles.BL.Providers;
+using UniqueFiles.BL.Registries;
 
 namespace UniqueFiles.BL.Cleaners
 {
@@ -29,6 +31,7 @@ namespace UniqueFiles.BL.Cleaners
         protected override void ProcessOneFolder(string currentFolder, Queue<string> folders)
         {
             base.ProcessOneFolder(currentFolder, folders);
+
             _processedFolders.Push(currentFolder);
         }
 

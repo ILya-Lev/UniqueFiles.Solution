@@ -2,7 +2,7 @@
 using UniqueFiles.BL.Providers;
 using UniqueFiles.BL.Registries;
 
-namespace UniqueFiles.BL
+namespace UniqueFiles.BL.Transactions
 {
     public class DuplicateCleaningTransaction : ITransaction
     {

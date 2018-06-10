@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace UniqueFiles.BL.Interfaces
+namespace UniqueFiles.BL.Registries
 {
     public interface IUniqueFileRegistry
     {
