@@ -21,7 +21,7 @@ namespace UniqueFiles.BL.Tests
 
         public DuplicateCleanerTests()
         {
-            var uniqueFileRegistry = new Mock<IUniqueFileRegistry>(MockBehavior.Strict);
+            var uniqueFileRegistry = new Mock<IUniqueFilesRegistry>(MockBehavior.Strict);
             uniqueFileRegistry.Setup(r => r.Contains(It.IsAny<FileInfo>()))
                               .Returns<FileInfo>(info => _uniqueNames.Contains(info.Name));
             uniqueFileRegistry.Setup(r => r.Add(It.IsAny<FileInfo>()))

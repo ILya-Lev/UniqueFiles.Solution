@@ -24,7 +24,7 @@ namespace UniqueFiles.BL.Transactions
                 var folderNamesProvider = new DirectoryProvider(backupManager.BackupRoot);
 
                 var cleaner = new DuplicateCleanerRemoveEmptyFolders(
-                    new UniqueFileRegistry(),
+                    new UniqueFilesRegistry(),
                     backedUpFileRegistry,
                     new FileProvider(),
                     folderNamesProvider,

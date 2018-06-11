@@ -2,7 +2,7 @@
 
 namespace UniqueFiles.BL.Registries
 {
-    public interface IUniqueFileRegistry
+    public interface IUniqueFilesRegistry
     {
         bool Contains(FileInfo fileInfo);
         void Add(FileInfo fileInfo);

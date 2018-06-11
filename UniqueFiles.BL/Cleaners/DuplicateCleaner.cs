@@ -7,17 +7,17 @@ namespace UniqueFiles.BL.Cleaners
 {
     public class DuplicateCleaner
     {
-        private readonly IUniqueFileRegistry _uniqueFileRegistry;
+        private readonly IUniqueFilesRegistry _uniqueFilesRegistry;
         private readonly IBackedUpFilesRegistry _backedUpFilesRegistry;
         private readonly IFileSystemEntityProvider _fileNamesProvider;
         private readonly IFileSystemEntityProvider _folderNamesProvider;
 
-        public DuplicateCleaner(IUniqueFileRegistry uniqueFileRegistry,
+        public DuplicateCleaner(IUniqueFilesRegistry uniqueFilesRegistry,
             IBackedUpFilesRegistry backedUpFilesRegistry,
             IFileSystemEntityProvider fileNamesProvider,
             IFileSystemEntityProvider folderNamesProvider)
         {
-            _uniqueFileRegistry = uniqueFileRegistry;
+            _uniqueFilesRegistry = uniqueFilesRegistry;
             _backedUpFilesRegistry = backedUpFilesRegistry;
             _fileNamesProvider = fileNamesProvider;
             _folderNamesProvider = folderNamesProvider;
@@ -51,10 +51,10 @@ namespace UniqueFiles.BL.Cleaners
         {
             var fileInfo = new FileInfo(filePath);
 
-            if (_uniqueFileRegistry.Contains(fileInfo))
+            if (_uniqueFilesRegistry.Contains(fileInfo))
                 _backedUpFilesRegistry.Add(fileInfo);
             else
-                _uniqueFileRegistry.Add(fileInfo);
+                _uniqueFilesRegistry.Add(fileInfo);
         }
     }
 }

@@ -1,21 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using UniqueFiles.BL.Interfaces;
 
 namespace UniqueFiles.BL.Registries
 {
-    public class UniqueFileRegistry : IUniqueFileRegistry
+    public class UniqueFilesRegistry : IUniqueFilesRegistry
     {
         private readonly HashSet<string> _registry = new HashSet<string>();
 
         public bool Contains(FileInfo fileInfo)
         {
-            return _registry.Contains(fileInfo.Name);
+            return _registry.Contains(fileInfo?.Name ?? "");
         }
 
         public void Add(FileInfo fileInfo)
         {
-            _registry.Add(fileInfo.Name);
+            if (string.IsNullOrWhiteSpace(fileInfo?.Name))
+                throw new InvalidOperationException("Cannot register empty file name as a unique one.");
+
+            if (!_registry.Add(fileInfo.Name))
+                throw new InvalidOperationException($"'{fileInfo.Name}' file is already registered as unique" +
+                                                    " and should not be passed here!");
         }
     }
 }

@@ -11,12 +11,12 @@ namespace UniqueFiles.BL.Cleaners
         private readonly Stack<string> _processedFolders = new Stack<string>();
 
         public DuplicateCleanerRemoveEmptyFolders(
-            IUniqueFileRegistry uniqueFileRegistry,
+            IUniqueFilesRegistry uniqueFilesRegistry,
             IBackedUpFilesRegistry backedUpFilesRegistry,
             IFileSystemEntityProvider fileNamesProvider,
             IFileSystemEntityProvider folderNamesProvider,
             IBackupDirectoryManager backupDirectoryManager)
-            : base(uniqueFileRegistry, backedUpFilesRegistry, fileNamesProvider, folderNamesProvider)
+            : base(uniqueFilesRegistry, backedUpFilesRegistry, fileNamesProvider, folderNamesProvider)
         {
             _backupDirectoryManager = backupDirectoryManager;
         }
