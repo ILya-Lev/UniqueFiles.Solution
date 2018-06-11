@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UniqueFiles.BL;
 using UniqueFiles.BL.Transactions;
 
-namespace UniqueFiles.ConsoleApp
+namespace UniqueFiles.ConsoleFrameworkApp
 {
     class Program
     {

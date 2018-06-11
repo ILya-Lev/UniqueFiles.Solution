@@ -3,6 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <Authors>Illia Levandovskyi</Authors>
+    <Description>console app for UnituqFiles.Solution
+the app is based on .NET Core v2.0</Description>
   </PropertyGroup>
 
   <ItemGroup>
