@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UniqueFiles.BL.Cleaners;
 using UniqueFiles.BL.Providers;
 using UniqueFiles.BL.Registries;
@@ -29,8 +30,9 @@ namespace UniqueFiles.BL.Tests
 
 
             var backedUpFileRegistry = new Mock<IBackedUpFilesRegistry>(MockBehavior.Strict);
-            backedUpFileRegistry.Setup(r => r.Add(It.IsAny<FileInfo>()))
-                                .Callback<FileInfo>(info => _backedUpNames.Add(info.Name));
+            backedUpFileRegistry.Setup(r => r.AddAsync(It.IsAny<FileInfo>()))
+                                .Callback<FileInfo>(info => _backedUpNames.Add(info.Name))
+                                .Returns<FileInfo>(info => Task.Run(() => info.Name));
 
             var fileNamesProvider = new Mock<IFileSystemEntityProvider>(MockBehavior.Strict);
             fileNamesProvider.Setup(p => p.GetDescendantPaths(It.IsAny<string>()))

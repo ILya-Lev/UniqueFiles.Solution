@@ -47,12 +47,12 @@ namespace UniqueFiles.BL.Cleaners
             }
         }
 
-        private void ProcessOneFile(string filePath)
+        private async void ProcessOneFile(string filePath)
         {
             var fileInfo = new FileInfo(filePath);
 
             if (_uniqueFilesRegistry.Contains(fileInfo))
-                _backedUpFilesRegistry.Add(fileInfo);
+                await _backedUpFilesRegistry.AddAsync(fileInfo);
             else
                 _uniqueFilesRegistry.Add(fileInfo);
         }

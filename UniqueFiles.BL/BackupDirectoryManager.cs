@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using UniqueFiles.BL.Interfaces;
+using UniqueFiles.BL.Registries;
 
 namespace UniqueFiles.BL
 {
@@ -16,6 +19,12 @@ namespace UniqueFiles.BL
 
         public void Dispose()
         {
+            while (BackedUpFilesRegistry.NumberOfFilesInCopying > 0)
+            {
+                Debug.WriteLine($"waiting for {BackedUpFilesRegistry.NumberOfFilesInCopying} files");
+                Thread.Sleep(10);
+            }
+
             DeleteBackupDirectory();
         }
 
