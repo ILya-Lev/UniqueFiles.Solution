@@ -11,7 +11,7 @@ namespace UniqueFiles.BL.Registries
 
         private readonly Dictionary<string, int> _backupFileCounters = new Dictionary<string, int>();
 
-        public static int NumberOfFilesInCopying = 0;
+        public static volatile int NumberOfFilesInCopying = 0;
 
         public BackedUpFilesRegistry(IBackupDirectoryManager backupDirectoryManager)
         {
